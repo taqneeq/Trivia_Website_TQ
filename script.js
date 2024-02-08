@@ -332,8 +332,7 @@ $(document).ready(function () {
 
     var counter = questions.length;
     var scoreAry = [];
-    var score1 = 0;
-    var score2 = true;
+    var consecutiveCorrectAnswers = 0; // New variable to track consecutive correct answers
 
     function createQuestion(questions) {
       questions = shuffleArray(questions);
@@ -395,16 +394,15 @@ $(document).ready(function () {
       if (answer == questions[qNum].a) {
         questions[qNum].correct = 1;
         scoreAry.push(questions[qNum].correct);
+        consecutiveCorrectAnswers++; // Increment consecutive correct answers
         $("body")
           .css("background-color", "green")
           .delay(500)
           .queue(function () {
             $(this).css("background-color", "").dequeue();
           });
-        score1++;
-        if (score1 == 3 && score2) {
+        if (consecutiveCorrectAnswers == 3) {
           $(".result").text("The sequence constant is: " + sequences[0]);
-          score2 = false;
         }
       } else {
         scoreAry.push(questions[qNum].correct);
@@ -414,7 +412,7 @@ $(document).ready(function () {
           .queue(function () {
             $(this).css("background-color", "").dequeue();
           });
-        score1 = 0;
+        consecutiveCorrectAnswers = 0; // Reset consecutive correct answers on incorrect answer
       }
     }
 
@@ -462,7 +460,7 @@ $(document).ready(function () {
         return false;
       }
 
-      if (score1 == 3) {
+      if (sumScore(questions) == 3) {
         $("#questions").find("form").remove();
         $("#questions").append(
           '<p class="result focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"></p>'
